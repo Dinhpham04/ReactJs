@@ -40,18 +40,20 @@ class UserManage extends Component {
                 <div className="title text-center">Manage User</div>
                 <div className="users-table mt-4 mx-1">
                     <table>
-                        <tr>
-                            <th>Email</th>
-                            <th>FirstName</th>
-                            <th>Lastname</th>
-                            <th>Address</th>
-                            <th>Action</th>
-                        </tr>
-                        {
-                            arrUsers && arrUsers.map((user, index) => {
-                                return (
-                                    <>
-                                        <tr>
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>FirstName</th>
+                                <th>Lastname</th>
+                                <th>Address</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                arrUsers && arrUsers.map((user, index) => {
+                                    return (
+                                        <tr key={index}>
                                             <td>{user.email}</td>
                                             <td>{user.firstName}</td>
                                             <td>{user.lastName}</td>
@@ -61,10 +63,10 @@ class UserManage extends Component {
                                                 <button className="btn-delete"><i className="fa-solid fa-trash"></i></button>
                                             </td>
                                         </tr>
-                                    </>
-                                )
-                            })
-                        }
+                                    )
+                                })
+                            }
+                        </tbody>
                     </table>
                 </div>
             </div>
