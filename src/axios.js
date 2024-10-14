@@ -7,16 +7,6 @@ const instance = axios.create({
     withCredentials: true
 });
 
-const createError = (httpStatusCode, statusCode, errorMessage, problems, errorCode = '') => {
-    const error = new Error();
-    error.httpStatusCode = httpStatusCode;
-    error.statusCode = statusCode;
-    error.errorMessage = errorMessage;
-    error.problems = problems;
-    error.errorCode = errorCode + "";
-    return error;
-};
-
 
 instance.interceptors.response.use(
     (response) => {
