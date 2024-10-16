@@ -40,3 +40,37 @@ tr:nth-child(even) {
         color: rgb(239, 186, 13) !important;
     }
 }
+
+.modal-user-container {
+    .modal-header {
+        .close {
+            background-color: transparent;
+            color: white;
+            border: none;
+            font-size: 24px;
+        }
+    }
+
+    .modal-user-body {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: space-around;
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            flex-basis: 48%;
+
+            input {
+                border-radius: 2px;
+                border: 1px solid gray;
+                height: 30px;
+                outline: none;
+                padding: 10px;
+            }
+
+
+        }
+    }
+}

@@ -2,17 +2,23 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import './UserManage.scss'
-import { getAllUsers } from '../../services/userService'
+import { getAllUsers, createNewUserService } from '../../services/userService'
+import ModalUser from './ModalUser';
 class UserManage extends Component {
     constructor(props) {
         super(props);
         this.state = {
             arrUsers: [],
+            isOpenModal: false,
         };
     }
 
+    // Hàm chạy khi khởi tạo một component
     async componentDidMount() {
-        console.log(this.render());
+        await this.getAllUsersFromReact();
+
+    }
+    getAllUsersFromReact = async () => {
         let response = await getAllUsers('ALL');
         if (response && response.errCode === 0) // không lỗi, lấy được dữ liệu từ API 
         {
@@ -20,24 +26,56 @@ class UserManage extends Component {
                 arrUsers: response.users,
             })
         }
-
     }
 
+    handleAddNewUser = () => {
+        this.setState({
+            isOpenModal: true,
+        })
+    }
 
-    /**
-     * 
-     * run component 
-     * 1. run construct => init state 
-     * 2 did mount (set state)
-     * 3. render 
-     */
+    toggleUserModal = () => {
+        this.setState({
+            isOpenModal: !this.state.isOpenModal,
+        })
+    }
+    createNewUser = async (data) => {
+        try {
+            let response = await createNewUserService(data);
+            if (response && response.errCode !== 0) {
+                alert(response.errMessage);
+            } else {
+                await this.getAllUsersFromReact();
+                this.setState({
+                    isOpenModal: false,
+                })
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
 
     render() {
         let arrUsers = this.state.arrUsers;
         return (
             <div className="users-container">
+                <ModalUser
+                    isOpen={this.state.isOpenModal}
+                    toggleFromParent={this.toggleUserModal}
+                    createNewUser={this.createNewUser}
+                />
                 <div className="title text-center">Manage User</div>
+                <div className="mx-1">
+                    <button
+                        className="btn btn-primary px-3"
+                        onClick={this.handleAddNewUser}
+                    >
+                        <i className="fa-solid fa-plus px-2"></i>
+                        Add new User
+                    </button>
+                </div>
                 <div className="users-table mt-4 mx-1">
                     <table>
                         <thead>
