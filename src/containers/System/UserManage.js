@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import './UserManage.scss'
-import { getAllUsers, createNewUserService } from '../../services/userService'
+import { getAllUsers, createNewUserService, deleteUserService } from '../../services/userService'
 import ModalUser from './ModalUser';
+import { emitter } from '../../utils/emitter';
 class UserManage extends Component {
     constructor(props) {
         super(props);
@@ -18,7 +19,7 @@ class UserManage extends Component {
         await this.getAllUsersFromReact();
 
     }
-    getAllUsersFromReact = async () => {
+    getAllUsersFromReact = async () => { // lấy tất cả user bằng cách dùng axois gọi api 
         let response = await getAllUsers('ALL');
         if (response && response.errCode === 0) // không lỗi, lấy được dữ liệu từ API 
         {
@@ -49,6 +50,21 @@ class UserManage extends Component {
                 this.setState({
                     isOpenModal: false,
                 })
+                emitter.emit('EVENT_CLEAR_MODAL_DATA', {}) // truyền dữ 1 event và dữ liệu  
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    handelDeleteUser = async (user) => {
+        // Muốn thêm hay sửa, xóa thì phải vào service viết function để gọi tới API thêm, sửa xóa bên server
+        try {
+            let response = await deleteUserService(user.id);
+            if (response && response.errCode === 0) {
+                this.getAllUsersFromReact();
+            } else {
+                alert(response.errMessage);
             }
         } catch (error) {
             console.log(error);
@@ -97,8 +113,12 @@ class UserManage extends Component {
                                             <td>{user.lastName}</td>
                                             <td>{user.address}</td>
                                             <td>
-                                                <button className="btn-edit"><i className="fa-solid fa-pencil"></i></button>
-                                                <button className="btn-delete"><i className="fa-solid fa-trash"></i></button>
+                                                <button className="btn-edit"
+
+                                                ><i className="fa-solid fa-pencil"></i></button>
+                                                <button className="btn-delete"
+                                                    onClick={() => this.handelDeleteUser(user)}
+                                                ><i className="fa-solid fa-trash"></i></button>
                                             </td>
                                         </tr>
                                     )

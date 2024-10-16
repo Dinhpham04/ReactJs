@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 // import './ModalUser.scss'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { emitter } from '../../utils/emitter';
 class ModalUser extends Component {
     constructor(props) {
         super(props);
@@ -14,6 +15,20 @@ class ModalUser extends Component {
             address: '',
             phoneNumber: '',
         };
+        this.listenToEmitter();
+    }
+
+    listenToEmitter() {
+        emitter.on('EVENT_CLEAR_MODAL_DATA', () => { // hứng event từ parent 
+            this.setState({ // reset state 
+                email: '',
+                password: '',
+                firstName: '',
+                lastName: '',
+                address: '',
+                phoneNumber: '',
+            })
+        })
     }
 
     // Hàm chạy khi khởi tạo một component
